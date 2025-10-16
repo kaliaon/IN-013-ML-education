@@ -1,0 +1,46 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter / notebooks
+.ipynb_checkpoints/
+
+# Editors / IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# Data artifacts (keep repo lean)
+data/**
+
+# Streamlit cache
+.streamlit/
+
+# MyPy / PyTest / coverage
+.mypy_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+
+
