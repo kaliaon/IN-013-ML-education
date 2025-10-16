@@ -1,0 +1,34 @@
+numpy>=1.26
+pandas>=2.2
+scikit-learn>=1.5
+scipy>=1.11
+
+# Gradient boosting
+xgboost>=2.1
+lightgbm>=4.5
+
+# Deep learning (optional per ТЗ)
+tensorflow>=2.16; platform_machine != "aarch64"
+tensorflow-cpu>=2.16; platform_machine == "aarch64"
+keras>=3.4
+
+# Feature engineering / automated features
+featuretools>=1.31
+
+# Visualization and dashboards
+matplotlib>=3.9
+seaborn>=0.13
+plotly>=5.24
+streamlit>=1.39
+
+# Model explanation / SHAP
+shap>=0.46
+
+# Utilities
+pyyaml>=6.0
+python-dotenv>=1.0
+joblib>=1.4
+tqdm>=4.66
+ipykernel>=6.29
+jupyterlab>=4.2
+
