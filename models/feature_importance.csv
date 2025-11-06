@@ -1,0 +1,66 @@
+feature,importance
+avg_score_TMA,655.013557663392
+clicks_homepage,653.007155778872
+clicks_oucontent,620.7528714816293
+avg_assessment_score,609.2821233216649
+clicks_resource,596.5031300081525
+clicks_per_activity,593.7547055462167
+clicks_forumng,563.2539874786323
+clicks_quiz,530.5053989285545
+clicks_subpage,516.753079826652
+total_clicks,500.75841778733474
+avg_score_Exam,475.53038019824237
+num_unique_activities,470.00800767574975
+clicks_url,424.002366370718
+assessment_submission_rate,417.6067965608123
+avg_score_CMA,353.25422275610583
+clicks_ouwiki,263.751706927463
+studied_credits,260.00114138391933
+total_assessments,247.75280432968106
+clicks_oucollaborate,206.75103838918247
+num_assessments_submitted,205.77289765748867
+date_unregistration,201.63134879662115
+clicks_glossary,183.00073710151202
+clicks_page,138.50128187253873
+highest_education_Lower Than A Level,115.75069795206119
+clicks_questionnaire,107.75121856483734
+clicks_externalquiz,101.7510688254183
+clicks_dataplus,100.25196538039036
+age_band_35-55,86.75048983093116
+clicks_ouelluminate,84.0009389634604
+clicks_htmlactivity,82.75050433869457
+clicks_dualpane,72.50054424612594
+region_South West Region,66.00039783049866
+imd_band_60-70%,65.75039012128471
+imd_band_20-30%,62.500397530658496
+region_London Region,60.500396701927755
+region_West Midlands Region,59.75041990128614
+num_of_prev_attempts,59.50073571947467
+imd_band_30-40%,59.25036803426906
+imd_band_10-20,58.50038868188663
+imd_band_50-60%,57.00038581089294
+region_South Region,56.25042043475978
+highest_education_HE Qualification,56.00042649014831
+kmeans_cluster,55.525366388762656
+region_North Western Region,54.25045544303177
+did_unregister,53.552981601537255
+region_Scotland,51.25042114912205
+region_Yorkshire Region,49.75040435999836
+clicks_folder,49.25080589362064
+gender_M,49.00060746133915
+imd_band_40-50%,47.00037653531391
+region_Ireland,45.500454239099575
+imd_band_70-80%,43.7503813706108
+dbscan_cluster,41.25065599664153
+region_Wales,39.75056281524365
+region_East Midlands Region,38.00040174579666
+region_South East Region,36.00039512016916
+imd_band_90-100%,34.50045919002602
+imd_band_80-90%,27.25042037904167
+disability_Y,26.00044062863588
+region_North Region,24.250325447748704
+highest_education_Post Graduate Qualification,15.500431122783654
+age_band_55<=,11.750286227150355
+highest_education_No Formal quals,11.500439271049702
+clicks_sharedsubpage,9.00056631210033
+clicks_repeatactivity,0.0
