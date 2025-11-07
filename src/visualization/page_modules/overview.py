@@ -17,60 +17,61 @@ from visualization.utils import (
     get_figure_path
 )
 from visualization.config import CLASS_COLORS, FEATURE_CATEGORIES
+from visualization.i18n import t
 
 
 def render():
     """Render the overview page."""
-    st.title("🏠 OULAD Learning Analytics - Overview")
+    st.title(f"🏠 {t('overview.title')}")
     st.markdown("---")
 
     # Load data
-    with st.spinner("Loading dataset..."):
+    with st.spinner(t('overview.loading_dataset')):
         df = load_dataset("clustered")
 
     if df.empty:
-        st.error("❌ Unable to load dataset. Please check data files.")
+        st.error(f"❌ {t('overview.unable_to_load_dataset')}")
         return
 
     # Compute statistics
     stats = compute_dataset_statistics(df)
 
     # Display key metrics
-    st.header("📊 Dataset Summary")
+    st.header(f"📊 {t('overview.dataset_summary')}")
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.metric(
-            label="Total Students",
+            label=t('overview.total_students'),
             value=format_number(stats["n_students"], 0),
-            help="Total number of student records"
+            help=t('overview.total_students_help')
         )
 
     with col2:
         st.metric(
-            label="Features",
+            label=t('overview.features'),
             value=stats["n_features"],
-            help="Total number of features in dataset"
+            help=t('overview.features_help')
         )
 
     with col3:
         st.metric(
-            label="Avg VLE Clicks",
+            label=t('overview.avg_vle_clicks'),
             value=format_number(stats["avg_clicks"], 0),
-            help="Average number of Virtual Learning Environment interactions"
+            help=t('overview.avg_vle_clicks_help')
         )
 
     with col4:
         st.metric(
-            label="Avg Assessment Score",
+            label=t('overview.avg_assessment_score'),
             value=format_number(stats["avg_assessment_score"], 1),
-            help="Average score across all assessments"
+            help=t('overview.avg_assessment_score_help')
         )
 
     st.markdown("---")
 
     # Target distribution
-    st.header("🎯 Student Outcomes Distribution")
+    st.header(f"🎯 {t('overview.outcomes_distribution')}")
 
     col1, col2 = st.columns([2, 1])
 
@@ -81,7 +82,7 @@ def render():
             fig = px.pie(
                 values=result_counts.values,
                 names=result_counts.index,
-                title="Final Results Distribution",
+                title=t('overview.final_results_distribution'),
                 color=result_counts.index,
                 color_discrete_map=CLASS_COLORS,
                 hole=0.4
@@ -91,7 +92,7 @@ def render():
             st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        st.subheader("Outcome Statistics")
+        st.subheader(t('overview.outcome_statistics'))
         for outcome, count in stats["target_distribution"].items():
             percentage = (count / stats["n_students"]) * 100
             st.metric(
@@ -103,7 +104,7 @@ def render():
     st.markdown("---")
 
     # Demographics analysis
-    st.header("👥 Demographics Overview")
+    st.header(f"👥 {t('overview.demographics')}")
 
     col1, col2, col3 = st.columns(3)
 
@@ -113,7 +114,7 @@ def render():
                 df,
                 x="gender",
                 color="final_result",
-                title="Gender Distribution by Outcome",
+                title=t('overview.gender_distribution'),
                 color_discrete_map=CLASS_COLORS,
                 barmode="group"
             )
@@ -126,7 +127,7 @@ def render():
                 df,
                 x="age_band",
                 color="final_result",
-                title="Age Distribution by Outcome",
+                title=t('overview.age_distribution'),
                 color_discrete_map=CLASS_COLORS,
                 barmode="group",
                 category_orders={"age_band": ["0-35", "35-55", "55<="]}
@@ -140,7 +141,7 @@ def render():
                 df,
                 x="num_of_prev_attempts",
                 color="final_result",
-                title="Previous Attempts by Outcome",
+                title=t('overview.previous_attempts'),
                 color_discrete_map=CLASS_COLORS,
                 barmode="group"
             )
@@ -150,7 +151,7 @@ def render():
     st.markdown("---")
 
     # VLE Activity Analysis
-    st.header("💻 Virtual Learning Environment Activity")
+    st.header(f"💻 {t('overview.vle_activity')}")
 
     col1, col2 = st.columns(2)
 
@@ -162,11 +163,11 @@ def render():
                 x="final_result",
                 y="total_clicks",
                 color="final_result",
-                title="VLE Clicks Distribution by Outcome",
+                title=t('overview.vle_clicks_distribution'),
                 color_discrete_map=CLASS_COLORS
             )
             fig.update_layout(height=400, showlegend=False)
-            fig.update_yaxes(title="Total Clicks")
+            fig.update_yaxes(title=t('overview.total_clicks'))
             st.plotly_chart(fig, use_container_width=True)
 
     with col2:
@@ -177,17 +178,17 @@ def render():
                 x="final_result",
                 y="assessment_submission_rate",
                 color="final_result",
-                title="Assessment Submission Rate by Outcome",
+                title=t('overview.assessment_submission_rate'),
                 color_discrete_map=CLASS_COLORS
             )
             fig.update_layout(height=400, showlegend=False)
-            fig.update_yaxes(title="Submission Rate")
+            fig.update_yaxes(title=t('overview.submission_rate'))
             st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
 
     # Correlation analysis
-    st.header("🔗 Feature Correlations")
+    st.header(f"🔗 {t('overview.correlations')}")
 
     # Select numeric features for correlation
     numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
@@ -197,7 +198,7 @@ def render():
 
     # Let user select features to correlate
     selected_features = st.multiselect(
-        "Select features to analyze correlations:",
+        t('overview.select_features'),
         options=numeric_cols,
         default=numeric_cols[:10] if len(numeric_cols) >= 10 else numeric_cols
     )
@@ -209,7 +210,7 @@ def render():
             corr_matrix,
             text_auto=".2f",
             aspect="auto",
-            title="Feature Correlation Heatmap",
+            title=t('overview.correlation_heatmap'),
             color_continuous_scale="RdBu_r",
             zmin=-1,
             zmax=1
@@ -220,12 +221,12 @@ def render():
     st.markdown("---")
 
     # Data quality section
-    st.header("✅ Data Quality Report")
+    st.header(f"✅ {t('overview.data_quality')}")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Missing Values")
+        st.subheader(t('overview.missing_values'))
         missing = df.isnull().sum()
         missing_pct = (missing / len(df)) * 100
         missing_df = pd.DataFrame({
@@ -238,18 +239,18 @@ def render():
         if len(missing_df) > 0:
             st.dataframe(missing_df, use_container_width=True, height=300)
         else:
-            st.success("✨ No missing values found!")
+            st.success(f"✨ {t('overview.no_missing_values')}")
 
     with col2:
-        st.subheader("Dataset Info")
+        st.subheader(t('overview.dataset_info'))
         info_data = {
             "Metric": [
-                "Total Records",
-                "Total Features",
-                "Numeric Features",
-                "Categorical Features",
-                "Memory Usage (MB)",
-                "Duplicate Rows"
+                t('overview.total_records'),
+                t('overview.total_features'),
+                t('overview.numeric_features'),
+                t('overview.categorical_features'),
+                t('overview.memory_usage'),
+                t('overview.duplicate_rows')
             ],
             "Value": [
                 len(df),
@@ -265,14 +266,14 @@ def render():
     st.markdown("---")
 
     # Download section
-    st.header("📥 Data Export")
+    st.header(f"📥 {t('overview.data_export')}")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
         csv = df.to_csv(index=False).encode('utf-8')
         st.download_button(
-            label="Download Full Dataset (CSV)",
+            label=t('overview.download_full_dataset'),
             data=csv,
             file_name="oulad_data.csv",
             mime="text/csv"
@@ -283,7 +284,7 @@ def render():
         summary = df.describe().T
         summary_csv = summary.to_csv().encode('utf-8')
         st.download_button(
-            label="Download Summary Statistics (CSV)",
+            label=t('overview.download_summary_stats'),
             data=summary_csv,
             file_name="oulad_summary_stats.csv",
             mime="text/csv"
@@ -294,7 +295,7 @@ def render():
         if selected_features:
             corr_csv = corr_matrix.to_csv().encode('utf-8')
             st.download_button(
-                label="Download Correlation Matrix (CSV)",
+                label=t('overview.download_correlation_matrix'),
                 data=corr_csv,
                 file_name="oulad_correlations.csv",
                 mime="text/csv"

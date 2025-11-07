@@ -21,15 +21,16 @@ from visualization.utils import (
     get_figure_path
 )
 from visualization.config import CLASS_COLORS, FIGURES_DIR
+from visualization.i18n import t
 
 
 def render():
     """Render the model performance page."""
-    st.title("📈 Model Performance Comparison")
+    st.title(f"📈 {t('performance.title')}")
     st.markdown("---")
 
     # Load comparison results
-    with st.spinner("Loading model performance data..."):
+    with st.spinner(t('performance.loading')):
         results_df = load_model_comparison_results()
         models = load_all_models()
 
@@ -69,7 +70,7 @@ def render():
     st.markdown("---")
 
     # Model comparison table
-    st.header("📊 Performance Metrics Comparison")
+    st.header(f"📊 {t('performance.metrics_comparison')}")
 
     # Format the dataframe for display
     display_df = results_df.copy()

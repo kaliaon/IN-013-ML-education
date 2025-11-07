@@ -20,11 +20,12 @@ from visualization.utils import (
     get_figure_path
 )
 from visualization.config import CLASS_COLORS
+from visualization.i18n import t
 
 
 def render():
     """Render the clustering page."""
-    st.title("👥 Student Clustering Analysis")
+    st.title(f"👥 {t('clustering.title')}")
     st.markdown("---")
 
     # Load data
@@ -126,7 +127,7 @@ def render():
     st.markdown("---")
 
     # Cluster visualization
-    st.header("🎨 Cluster Visualization")
+    st.header(f"🎨 {t('clustering.visualization')}")
 
     viz_method = st.radio(
         "Dimensionality reduction method:",
@@ -211,7 +212,7 @@ def render():
     # Select cluster to profile
     cluster_ids = sorted(df[cluster_col].unique())
     selected_cluster = st.selectbox(
-        "Select cluster to analyze:",
+        t('clustering.select_cluster'),
         options=cluster_ids,
         format_func=lambda x: f"Cluster {x}" if x != -1 else "Noise Points"
     )

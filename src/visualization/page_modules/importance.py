@@ -19,15 +19,16 @@ from visualization.utils import (
     get_figure_path
 )
 from visualization.config import FEATURE_CATEGORIES, FIGURES_DIR
+from visualization.i18n import t
 
 
 def render():
     """Render the feature importance page."""
-    st.title("⭐ Feature Importance Analysis")
+    st.title(f"⭐ {t('importance.title')}")
     st.markdown("---")
 
     # Load data
-    with st.spinner("Loading feature importance data..."):
+    with st.spinner(t('importance.loading')):
         importance_scores = load_feature_importance()
         models = load_all_models()
         df = load_dataset("clustered")
@@ -60,7 +61,7 @@ def render():
     st.markdown("---")
 
     # Top features visualization
-    st.header("🏆 Top Important Features")
+    st.header(f"🏆 {t('importance.top_features')}")
 
     # Slider to select number of features
     n_features = st.slider(
@@ -221,7 +222,7 @@ def render():
     st.markdown("---")
 
     # Feature correlation analysis
-    st.header("🔗 Feature Correlations")
+    st.header(f"🔗 {t('importance.correlations')}")
 
     st.markdown("Understanding correlations helps identify redundant features and feature engineering opportunities.")
 

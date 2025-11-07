@@ -19,7 +19,8 @@ sys.path.insert(0, str(src_dir))
 # Import using absolute paths
 from visualization.config import PAGE_CONFIG, PAGES
 from visualization.utils import check_data_availability
-from visualization.pages import overview, predictions, clustering, performance, importance
+from visualization.page_modules import overview, predictions, clustering, performance, importance
+from visualization.i18n import t, language_selector_sidebar, get_current_language
 
 
 def main():
@@ -61,44 +62,64 @@ def main():
 
     # Sidebar
     with st.sidebar:
-        st.markdown("""
+        st.markdown(f"""
             <div style='text-align: center; padding: 1rem 0;'>
                 <h1 style='color: #3498db; margin: 0;'>📊 OULAD</h1>
-                <h3 style='color: #7f8c8d; margin: 0;'>Learning Analytics</h3>
+                <h3 style='color: #7f8c8d; margin: 0;'>{t('app.subtitle')}</h3>
             </div>
         """, unsafe_allow_html=True)
 
         st.markdown("---")
 
         # Navigation
-        st.subheader("📑 Navigation")
-        selected_page = st.radio(
-            "Select a page:",
-            options=list(PAGES.keys()),
+        st.subheader(f"📑 {t('navigation.title')}")
+
+        # Translate page names
+        page_translations = {
+            "🏠 Overview": f"🏠 {t('pages.overview')}",
+            "🎯 Predictions": f"🎯 {t('pages.predictions')}",
+            "👥 Clustering": f"👥 {t('pages.clustering')}",
+            "📈 Model Performance": f"📈 {t('pages.performance')}",
+            "⭐ Feature Importance": f"⭐ {t('pages.importance')}"
+        }
+
+        translated_pages = [page_translations[page] for page in PAGES.keys()]
+        selected_page_translated = st.radio(
+            t('navigation.select_page'),
+            options=translated_pages,
             label_visibility="collapsed"
         )
+
+        # Map back to original key
+        reverse_map = {v: k for k, v in page_translations.items()}
+        selected_page = reverse_map[selected_page_translated]
+
+        st.markdown("---")
+
+        # Language selector
+        language_selector_sidebar()
 
         st.markdown("---")
 
         # System status
-        st.subheader("⚙️ System Status")
+        st.subheader(f"⚙️ {t('system_status.title')}")
 
         availability = check_data_availability()
 
         status_items = {
-            "Processed Data": availability["processed_data"],
-            "Clustered Data": availability["clustered_data"],
-            "ML Models": availability["models"],
-            "Label Encoder": availability["label_encoder"],
-            "Feature Names": availability["feature_names"]
+            t('system_status.processed_data'): availability["processed_data"],
+            t('system_status.clustered_data'): availability["clustered_data"],
+            t('system_status.ml_models'): availability["models"],
+            t('system_status.label_encoder'): availability["label_encoder"],
+            t('system_status.feature_names'): availability["feature_names"]
         }
 
         all_available = all(status_items.values())
 
         if all_available:
-            st.success("✅ All systems operational")
+            st.success(f"✅ {t('system_status.all_operational')}")
         else:
-            st.warning("⚠️ Some data missing")
+            st.warning(f"⚠️ {t('system_status.some_missing')}")
 
         for item, status in status_items.items():
             icon = "✅" if status else "❌"
@@ -107,90 +128,91 @@ def main():
         st.markdown("---")
 
         # Project information
-        with st.expander("ℹ️ About This Dashboard"):
-            st.markdown("""
-                **OULAD Learning Analytics Dashboard**
+        with st.expander(f"ℹ️ {t('help.about_title')}"):
+            st.markdown(f"""
+                **{t('app.title')}**
 
-                This interactive dashboard provides comprehensive analysis of student
-                performance using the Open University Learning Analytics Dataset.
+                {t('help.about_description')}
 
-                **Features:**
-                - Dataset exploration and statistics
-                - Student performance predictions
-                - Behavioral clustering analysis
-                - Model performance comparison
-                - Feature importance insights
+                **{t('help.features_title')}**
+                - {t('help.feature_1')}
+                - {t('help.feature_2')}
+                - {t('help.feature_3')}
+                - {t('help.feature_4')}
+                - {t('help.feature_5')}
 
-                **Phase:** 5 - Visualizations & Dashboard
-                **Dataset:** OULAD (32K+ students)
-                **Models:** Decision Tree, Random Forest, XGBoost, LightGBM
+                **{t('help.phase')}** 5 - {t('help.phase_name')}
+                **{t('help.dataset')}** OULAD (32K+ {t('help.students')})
+                **{t('help.models')}** Decision Tree, Random Forest, XGBoost, LightGBM
             """)
 
-        with st.expander("📚 How to Use"):
-            st.markdown("""
-                **Overview Page:**
-                - View dataset statistics and distributions
-                - Explore demographic patterns
-                - Analyze VLE activity and assessments
+        with st.expander(f"📚 {t('help.how_to_use_title')}"):
+            st.markdown(f"""
+                **{t('pages.overview')}:**
+                - {t('help.overview_1')}
+                - {t('help.overview_2')}
+                - {t('help.overview_3')}
 
-                **Predictions Page:**
-                - Predict individual student outcomes
-                - Run batch predictions
-                - Perform what-if analysis
+                **{t('pages.predictions')}:**
+                - {t('help.predictions_1')}
+                - {t('help.predictions_2')}
+                - {t('help.predictions_3')}
 
-                **Clustering Page:**
-                - Explore student behavioral groups
-                - Analyze cluster characteristics
-                - View PCA/t-SNE visualizations
+                **{t('pages.clustering')}:**
+                - {t('help.clustering_1')}
+                - {t('help.clustering_2')}
+                - {t('help.clustering_3')}
 
-                **Performance Page:**
-                - Compare model metrics
-                - View confusion matrices and ROC curves
-                - Understand model trade-offs
+                **{t('pages.performance')}:**
+                - {t('help.performance_1')}
+                - {t('help.performance_2')}
+                - {t('help.performance_3')}
 
-                **Feature Importance Page:**
-                - Identify key predictive features
-                - Analyze feature categories
-                - Explore SHAP explanations
+                **{t('pages.importance')}:**
+                - {t('help.importance_1')}
+                - {t('help.importance_2')}
+                - {t('help.importance_3')}
             """)
 
-        with st.expander("🎓 Dissertation Info"):
-            st.markdown("""
-                **Topic:**
+        with st.expander(f"🎓 {t('help.dissertation_title')}"):
+            st.markdown(f"""
+                **{t('help.topic')}**
                 Методы и алгоритмы оптимального управления
                 учебным процессом на основе больших данных
 
-                **Translation:**
+                **{t('help.translation')}**
                 Methods and algorithms for optimal educational
                 process management based on big data
 
-                **University:** Open University
-                **Dataset:** OULAD (Open University Learning Analytics Dataset)
-                **Technologies:** Python, Scikit-learn, XGBoost, LightGBM, Streamlit
+                **{t('help.university')}** Open University
+                **{t('help.dataset')}** OULAD (Open University Learning Analytics Dataset)
+                **{t('help.technologies')}** Python, Scikit-learn, XGBoost, LightGBM, Streamlit
             """)
 
         st.markdown("---")
 
         # Footer
-        st.markdown("""
+        st.markdown(f"""
             <div style='text-align: center; color: #7f8c8d; font-size: 0.8rem;'>
-                <p>Built with Streamlit</p>
-                <p>© 2025 Learning Analytics Project</p>
+                <p>{t('footer.built_with')} Streamlit</p>
+                <p>{t('footer.copyright')}</p>
             </div>
         """, unsafe_allow_html=True)
 
     # Main content area
     if not all_available:
-        st.error("""
-            ⚠️ **Missing Required Data**
+        st.error(f"""
+            ⚠️ **{t('messages.missing_data_title')}**
 
-            Some required data files or models are not available. Please ensure:
-            1. Phase 1-4 notebooks have been executed
-            2. Data files are in `data/processed/oulad/`
-            3. Model files are in `models/`
-            4. All dependencies are installed
+            {t('messages.missing_data_desc')}
 
-            Check the sidebar for detailed status.
+            {t('messages.ensure_steps')}
+            1. {t('messages.step_1')}
+            2. {t('messages.step_2')}
+            3. {t('messages.step_3')}
+            4. {t('messages.step_4')}
+
+            {t('messages.check_sidebar')}
         """)
         st.stop()
 
@@ -208,15 +230,15 @@ def main():
         page_module = page_map[selected_page]
         page_module.render()
     except Exception as e:
-        st.error(f"❌ Error rendering page: {e}")
+        st.error(f"❌ {t('messages.error_rendering')}: {e}")
         st.exception(e)
 
     # Footer in main area
     st.markdown("---")
-    st.markdown("""
+    st.markdown(f"""
         <div style='text-align: center; color: #7f8c8d; padding: 2rem 0;'>
-            <p><strong>OULAD Learning Analytics Dashboard</strong></p>
-            <p>Empowering educators with data-driven insights for student success</p>
+            <p><strong>{t('app.title')}</strong></p>
+            <p>{t('footer.tagline')}</p>
         </div>
     """, unsafe_allow_html=True)
 

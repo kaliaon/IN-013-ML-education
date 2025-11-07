@@ -19,22 +19,23 @@ from visualization.utils import (
     format_percentage
 )
 from visualization.config import CATEGORICAL_FEATURES, CLASS_COLORS, FEATURE_CATEGORIES
+from visualization.i18n import t
 
 
 def render():
     """Render the predictions page."""
-    st.title("🎯 Student Performance Prediction")
+    st.title(f"🎯 {t('predictions.title')}")
     st.markdown("---")
 
     # Load required data
-    with st.spinner("Loading models and data..."):
+    with st.spinner(t('predictions.loading')):
         models = load_all_models()
         label_encoder = load_label_encoder()
         feature_names = load_feature_names()
         df = load_dataset("clustered")
 
     if not models or label_encoder is None or feature_names is None or df.empty:
-        st.error("❌ Unable to load required models or data. Please check model files.")
+        st.error(f"❌ {t('predictions.unable_to_load_models')}")
         return
 
     # Tabs for different prediction modes
@@ -55,8 +56,8 @@ def render():
 
 def render_manual_prediction(models, label_encoder, feature_names, df):
     """Render manual input prediction interface."""
-    st.header("📝 Predict Individual Student Performance")
-    st.markdown("Enter student characteristics to predict their likely outcome.")
+    st.header(f"📝 {t('predictions.manual_title')}")
+    st.markdown(t('predictions.manual_desc'))
 
     # Model selection
     model_options = {
@@ -67,21 +68,21 @@ def render_manual_prediction(models, label_encoder, feature_names, df):
     }
 
     selected_model_name = st.selectbox(
-        "Select prediction model:",
+        t('predictions.select_model'),
         options=list(model_options.keys()),
-        help="LightGBM achieved the best performance (88.83% accuracy)"
+        help=t('predictions.model_help')
     )
     selected_model = models[model_options[selected_model_name]]
 
     st.markdown("---")
 
     # Create input form organized by categories
-    st.subheader("Student Information")
+    st.subheader(t('predictions.student_info'))
 
     input_data = {}
 
     # Demographics
-    with st.expander("👤 Demographics", expanded=True):
+    with st.expander(f"👤 {t('predictions.demographics')}", expanded=True):
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -123,7 +124,7 @@ def render_manual_prediction(models, label_encoder, feature_names, df):
             )
 
     # VLE Activity
-    with st.expander("💻 VLE Activity", expanded=True):
+    with st.expander(f"💻 {t('predictions.vle_activity')}", expanded=True):
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -191,7 +192,7 @@ def render_manual_prediction(models, label_encoder, feature_names, df):
             input_data[feat] = 0
 
     # Assessment Performance
-    with st.expander("📊 Assessment Performance", expanded=True):
+    with st.expander(f"📊 {t('predictions.assessment_performance')}", expanded=True):
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -255,7 +256,7 @@ def render_manual_prediction(models, label_encoder, feature_names, df):
             )
 
     # Registration info
-    with st.expander("📝 Registration", expanded=False):
+    with st.expander(f"📝 {t('predictions.registration')}", expanded=False):
         col1, col2 = st.columns(2)
 
         with col1:
@@ -285,7 +286,7 @@ def render_manual_prediction(models, label_encoder, feature_names, df):
     st.markdown("---")
 
     # Predict button
-    if st.button("🔮 Predict Performance", type="primary", use_container_width=True):
+    if st.button(f"🔮 {t('predictions.predict_button')}", type="primary", use_container_width=True):
         with st.spinner("Running prediction..."):
             try:
                 # Prepare features
@@ -300,7 +301,7 @@ def render_manual_prediction(models, label_encoder, feature_names, df):
                 risk_level, risk_color = get_risk_level(prediction)
 
                 # Display results
-                st.success("✅ Prediction Complete!")
+                st.success(f"✅ {t('predictions.prediction_complete')}")
 
                 col1, col2, col3 = st.columns(3)
 
@@ -384,7 +385,7 @@ def render_manual_prediction(models, label_encoder, feature_names, df):
 
 def render_batch_prediction(models, label_encoder, feature_names, df):
     """Render batch prediction interface."""
-    st.header("📊 Batch Student Prediction")
+    st.header(f"📊 {t('predictions.batch_title')}")
     st.markdown("Upload a CSV file or use existing data to predict multiple students at once.")
 
     # Data source selection
@@ -531,7 +532,7 @@ def render_batch_prediction(models, label_encoder, feature_names, df):
 
 def render_whatif_analysis(models, label_encoder, feature_names, df):
     """Render what-if analysis interface."""
-    st.header("🔮 What-If Analysis")
+    st.header(f"🔮 {t('predictions.whatif_title')}")
     st.markdown("Explore how changes in student behavior affect predictions.")
 
     st.info("💡 **Tip:** Adjust the sliders to see how different factors impact the predicted outcome.")
