@@ -44,7 +44,8 @@ def load_dataset(dataset_type: str = "clustered") -> pd.DataFrame:
 
         return df
     except Exception as e:
-        st.error(f"Error loading dataset: {e}")
+        from visualization.i18n import t
+        st.error(t('utils.error_loading_dataset').format(e=e))
         return pd.DataFrame()
 
 
@@ -68,7 +69,8 @@ def load_model(model_name: str) -> Any:
             model = pickle.load(f)
         return model
     except Exception as e:
-        st.error(f"Error loading model {model_name}: {e}")
+        from visualization.i18n import t
+        st.error(t('utils.error_loading_model').format(model=model_name, e=e))
         return None
 
 
@@ -128,7 +130,8 @@ def load_model_comparison_results() -> pd.DataFrame:
         else:
             return pd.DataFrame()
     except Exception as e:
-        st.error(f"Error loading model comparison results: {e}")
+        from visualization.i18n import t
+        st.error(t('utils.error_loading_comparison').format(e=e))
         return pd.DataFrame()
 
 
@@ -148,7 +151,8 @@ def load_feature_importance() -> pd.Series:
         else:
             return pd.Series()
     except Exception as e:
-        st.error(f"Error loading feature importance: {e}")
+        from visualization.i18n import t
+        st.error(t('utils.error_loading_importance').format(e=e))
         return pd.Series()
 
 

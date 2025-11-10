@@ -35,11 +35,11 @@ def render():
         models = load_all_models()
 
     if results_df.empty:
-        st.error("❌ Unable to load model comparison results.")
+        st.error(t('performance.unable_to_load_results'))
         return
 
     # Performance overview
-    st.header("🏆 Performance Overview")
+    st.header(t('performance.overview_title'))
 
     # Display best model prominently
     best_model = results_df.iloc[0]  # Assuming sorted by accuracy
@@ -47,12 +47,12 @@ def render():
     col1, col2, col3 = st.columns([2, 1, 1])
 
     with col1:
-        st.success("**🥇 Best Model**")
+        st.success(t('performance.best_model_label'))
         st.metric(
             label=best_model["Model"],
             value=format_percentage(best_model["Accuracy"]),
-            delta="Highest Accuracy",
-            help="Model with the best overall accuracy"
+            delta=t('performance.highest_accuracy'),
+            help=t('performance.best_model_help')
         )
 
     with col2:
@@ -89,24 +89,24 @@ def render():
 
     with col1:
         best_f1 = results_df.loc[results_df["F1 Score"].idxmax()]
-        st.info(f"**Best F1:** {best_f1['Model']} ({format_percentage(best_f1['F1 Score'])})")
+        st.info(t('performance.best_f1').format(model=best_f1['Model'], score=format_percentage(best_f1['F1 Score'])))
 
     with col2:
         best_precision = results_df.loc[results_df["Precision"].idxmax()]
-        st.info(f"**Best Precision:** {best_precision['Model']} ({format_percentage(best_precision['Precision'])})")
+        st.info(t('performance.best_precision').format(model=best_precision['Model'], score=format_percentage(best_precision['Precision'])))
 
     with col3:
         best_recall = results_df.loc[results_df["Recall"].idxmax()]
-        st.info(f"**Best Recall:** {best_recall['Model']} ({format_percentage(best_recall['Recall'])})")
+        st.info(t('performance.best_recall').format(model=best_recall['Model'], score=format_percentage(best_recall['Recall'])))
 
     st.markdown("---")
 
     # Interactive metric comparison
-    st.header("📈 Interactive Metric Comparison")
+    st.header(t('performance.interactive_title'))
 
     # Metric selector
     selected_metrics = st.multiselect(
-        "Select metrics to compare:",
+        t('performance.select_metrics'),
         options=["Accuracy", "F1 Score", "Precision", "Recall", "ROC-AUC"],
         default=["Accuracy", "F1 Score", "ROC-AUC"]
     )
@@ -147,20 +147,20 @@ def render():
                 col=col
             )
 
-            fig.update_yaxes(title_text="Score (%)", range=[0, 105], row=row, col=col)
+            fig.update_yaxes(title_text=t('performance.score_percent'), range=[0, 105], row=row, col=col)
             fig.update_xaxes(tickangle=-45, row=row, col=col)
 
-        fig.update_layout(height=300 * n_rows, title_text="Model Performance Comparison")
+        fig.update_layout(height=300 * n_rows, title_text=t('performance.comparison_title'))
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
 
     # Radar chart comparison
-    st.header("🎯 Multi-Metric Radar Chart")
+    st.header(t('performance.radar_chart_title'))
 
     # Select models to compare
     selected_models = st.multiselect(
-        "Select models to compare:",
+        t('performance.select_models'),
         options=results_df["Model"].tolist(),
         default=results_df["Model"].tolist()[:3]
     )
@@ -191,7 +191,7 @@ def render():
                 )
             ),
             showlegend=True,
-            title="Multi-Metric Performance Comparison",
+            title=t('performance.radar_title'),
             height=500
         )
 
@@ -200,9 +200,9 @@ def render():
     st.markdown("---")
 
     # Confusion matrices
-    st.header("🔍 Confusion Matrices")
+    st.header(t('performance.confusion_title'))
 
-    st.markdown("Confusion matrices show how well each model classifies different student outcomes.")
+    st.markdown(t('performance.confusion_desc'))
 
     # Display confusion matrix image if available
     confusion_fig_path = get_figure_path("14_confusion_matrices.png")
@@ -210,164 +210,123 @@ def render():
     if confusion_fig_path.exists():
         try:
             image = Image.open(confusion_fig_path)
-            st.image(image, caption="Confusion Matrices for All Models", use_column_width=True)
+            st.image(image, caption=t('performance.confusion_caption'), use_column_width=True)
         except Exception as e:
-            st.warning(f"Could not load confusion matrix image: {e}")
+            st.warning(t('performance.confusion_load_error').format(e=e))
     else:
-        st.info("Confusion matrix visualization not found. Run Phase 3 notebook to generate.")
+        st.info(t('performance.confusion_not_found'))
 
     st.markdown("---")
 
     # ROC Curves
-    st.header("📉 ROC Curves")
+    st.header(t('performance.roc_title'))
 
-    st.markdown("ROC curves illustrate the trade-off between true positive rate and false positive rate.")
+    st.markdown(t('performance.roc_desc'))
 
     roc_fig_path = get_figure_path("15_roc_curves.png")
 
     if roc_fig_path.exists():
         try:
             image = Image.open(roc_fig_path)
-            st.image(image, caption="ROC Curves (One-vs-Rest)", use_column_width=True)
+            st.image(image, caption=t('performance.roc_caption'), use_column_width=True)
         except Exception as e:
-            st.warning(f"Could not load ROC curve image: {e}")
+            st.warning(t('performance.roc_load_error').format(e=e))
     else:
-        st.info("ROC curve visualization not found. Run Phase 3 notebook to generate.")
+        st.info(t('performance.roc_not_found'))
 
     st.markdown("---")
 
     # Model complexity comparison
-    st.header("⚙️ Model Complexity Analysis")
+    st.header(t('performance.complexity_title'))
 
-    st.markdown("""
-    Different models have different computational requirements and interpretability characteristics.
-    """)
+    st.markdown(t('performance.complexity_desc'))
 
     complexity_data = {
-        "Model": ["Decision Tree", "Random Forest", "XGBoost", "LightGBM"],
-        "Training Speed": ["Fast", "Moderate", "Slow", "Fast"],
-        "Prediction Speed": ["Very Fast", "Fast", "Moderate", "Very Fast"],
-        "Interpretability": ["High", "Medium", "Low", "Low"],
-        "Memory Usage": ["Low", "High", "High", "Medium"],
-        "Overfitting Risk": ["High", "Low", "Low", "Low"]
+        t('performance.complexity_headers.model'): ["Decision Tree", "Random Forest", "XGBoost", "LightGBM"],
+        t('performance.complexity_headers.training_speed'): [
+            t('performance.complexity_values.fast'),
+            t('performance.complexity_values.moderate'),
+            t('performance.complexity_values.slow'),
+            t('performance.complexity_values.fast')
+        ],
+        t('performance.complexity_headers.prediction_speed'): [
+            t('performance.complexity_values.very_fast'),
+            t('performance.complexity_values.fast'),
+            t('performance.complexity_values.moderate'),
+            t('performance.complexity_values.very_fast')
+        ],
+        t('performance.complexity_headers.interpretability'): [
+            t('performance.complexity_values.high'),
+            t('performance.complexity_values.medium'),
+            t('performance.complexity_values.low'),
+            t('performance.complexity_values.low')
+        ],
+        t('performance.complexity_headers.memory_usage'): [
+            t('performance.complexity_values.low'),
+            t('performance.complexity_values.high'),
+            t('performance.complexity_values.high'),
+            t('performance.complexity_values.medium')
+        ],
+        t('performance.complexity_headers.overfitting_risk'): [
+            t('performance.complexity_values.high'),
+            t('performance.complexity_values.low'),
+            t('performance.complexity_values.low'),
+            t('performance.complexity_values.low')
+        ]
     }
 
     complexity_df = pd.DataFrame(complexity_data)
 
     # Add performance data
     if not results_df.empty:
+        model_col = t('performance.complexity_headers.model')
+        accuracy_col = t('performance.complexity_headers.accuracy')
         for _, row in results_df.iterrows():
             model_name = row["Model"]
-            if model_name in complexity_df["Model"].values:
-                idx = complexity_df[complexity_df["Model"] == model_name].index[0]
-                complexity_df.loc[idx, "Accuracy"] = f"{row['Accuracy']*100:.2f}%"
+            if model_name in complexity_df[model_col].values:
+                idx = complexity_df[complexity_df[model_col] == model_name].index[0]
+                complexity_df.loc[idx, accuracy_col] = f"{row['Accuracy']*100:.2f}%"
 
     st.dataframe(complexity_df, use_container_width=True, hide_index=True)
 
     st.markdown("---")
 
     # Model recommendations
-    st.header("💡 Model Selection Recommendations")
+    st.header(t('performance.recommendations_title'))
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("✅ Best for Production")
-        st.success("**LightGBM** or **XGBoost**")
-        st.markdown("""
-        **Reasons:**
-        - Highest accuracy and F1 scores
-        - Good balance of speed and performance
-        - Handle large datasets efficiently
-        - Robust to overfitting
-        - Strong ROC-AUC scores (>0.97)
-        """)
+        st.subheader(t('performance.best_production_title'))
+        st.success(t('performance.best_production_models'))
+        st.markdown(t('performance.best_production_reasons'))
 
     with col2:
-        st.subheader("🔍 Best for Interpretability")
-        st.info("**Decision Tree** or **Random Forest**")
-        st.markdown("""
-        **Reasons:**
-        - Easy to visualize decision paths
-        - Feature importance is intuitive
-        - Can explain individual predictions
-        - Good for stakeholder communication
-        - Acceptable accuracy trade-off
-        """)
+        st.subheader(t('performance.best_interpretability_title'))
+        st.info(t('performance.best_interpretability_models'))
+        st.markdown(t('performance.best_interpretability_reasons'))
 
     st.markdown("---")
 
     # Performance insights
-    st.header("📊 Key Performance Insights")
+    st.header(t('performance.insights_title'))
 
-    with st.expander("🎯 Overall Findings", expanded=True):
-        st.markdown(f"""
-        1. **Best Overall Model:** {best_model['Model']} achieved {format_percentage(best_model['Accuracy'])} accuracy
+    with st.expander(t('performance.insights_overall_title'), expanded=True):
+        st.markdown(t('performance.insights_overall_content').format(
+            model=best_model['Model'],
+            accuracy=format_percentage(best_model['Accuracy'])
+        ))
 
-        2. **High Performance Across Board:** All models achieved >87% accuracy, indicating:
-           - Well-engineered features
-           - Quality data preprocessing
-           - Appropriate model selection
+    with st.expander(t('performance.insights_challenges_title')):
+        st.markdown(t('performance.insights_challenges_content'))
 
-        3. **ROC-AUC Excellence:** All models achieved >0.96 ROC-AUC, showing:
-           - Strong discriminative power
-           - Good probability calibration
-           - Reliable across all classes
-
-        4. **Ensemble Methods Win:** Random Forest, XGBoost, and LightGBM outperform single Decision Tree:
-           - Better generalization
-           - Reduced overfitting
-           - More robust predictions
-        """)
-
-    with st.expander("⚠️ Challenges & Limitations"):
-        st.markdown("""
-        1. **Class Imbalance:**
-           - "Distinction" class is underrepresented (~9%)
-           - May affect precision/recall for this class
-           - Consider SMOTE or class weights for improvement
-
-        2. **Feature Complexity:**
-           - 67 features after encoding
-           - Some features may be redundant
-           - Feature selection could improve efficiency
-
-        3. **Interpretability Trade-off:**
-           - Best models (XGBoost/LightGBM) are less interpretable
-           - Important for educational stakeholder buy-in
-           - SHAP values can help bridge this gap
-        """)
-
-    with st.expander("🚀 Recommendations for Improvement"):
-        st.markdown("""
-        1. **Hyperparameter Tuning:**
-           - Use GridSearchCV or Bayesian optimization
-           - Could gain 1-2% accuracy improvement
-
-        2. **Ensemble Stacking:**
-           - Combine predictions from multiple models
-           - Potential for marginal gains
-
-        3. **Deep Learning:**
-           - Try LSTM for temporal patterns
-           - Transformer models for sequence modeling
-           - May capture complex interactions
-
-        4. **Early Prediction:**
-           - Train models on partial semester data
-           - Enable intervention before course completion
-           - Evaluate accuracy vs. timing trade-off
-
-        5. **Real-time Updates:**
-           - Implement online learning
-           - Update predictions as new data arrives
-           - Adapt to changing student behavior
-        """)
+    with st.expander(t('performance.insights_recommendations_title')):
+        st.markdown(t('performance.insights_recommendations_content'))
 
     st.markdown("---")
 
     # Export section
-    st.header("📥 Export Performance Data")
+    st.header(t('performance.export_title'))
 
     col1, col2 = st.columns(2)
 
@@ -375,7 +334,7 @@ def render():
         if not results_df.empty:
             csv = results_df.to_csv(index=False).encode('utf-8')
             st.download_button(
-                label="Download Performance Metrics (CSV)",
+                label=t('performance.download_metrics'),
                 data=csv,
                 file_name="model_performance_comparison.csv",
                 mime="text/csv"
@@ -385,7 +344,7 @@ def render():
         if not complexity_df.empty:
             csv = complexity_df.to_csv(index=False).encode('utf-8')
             st.download_button(
-                label="Download Complexity Analysis (CSV)",
+                label=t('performance.download_complexity'),
                 data=csv,
                 file_name="model_complexity_analysis.csv",
                 mime="text/csv"
