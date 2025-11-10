@@ -1,0 +1,46 @@
+{
+  "0": {
+    "label": "At-Risk/Disengaged",
+    "description": "Low engagement, low submission rate, high dropout risk",
+    "size": 11070,
+    "avg_clicks": 209.0483288166215,
+    "avg_submission_rate": 0.10338798058310253,
+    "pass_rate": 0.004426377597109304,
+    "distinction_rate": 0.0003613369467028004,
+    "fail_rate": 0.2989159891598916,
+    "withdrawn_rate": 0.6962962962962963
+  },
+  "1": {
+    "label": "Steady Performers",
+    "description": "Moderate engagement, consistent performance",
+    "size": 12742,
+    "avg_clicks": 1048.657746036729,
+    "avg_submission_rate": 0.8138697957721659,
+    "pass_rate": 0.6277664416889028,
+    "distinction_rate": 0.13545754198712917,
+    "fail_rate": 0.16716371056349083,
+    "withdrawn_rate": 0.06961230576047717
+  },
+  "2": {
+    "label": "High Achievers",
+    "description": "High engagement, high submission rate, strong performance",
+    "size": 1113,
+    "avg_clicks": 5987.174303683738,
+    "avg_submission_rate": 0.8216410124765919,
+    "pass_rate": 0.5911949685534591,
+    "distinction_rate": 0.3216531895777179,
+    "fail_rate": 0.050314465408805034,
+    "withdrawn_rate": 0.036837376460017966
+  },
+  "3": {
+    "label": "High Achievers",
+    "description": "High engagement, high submission rate, strong performance",
+    "size": 4527,
+    "avg_clicks": 3545.5122597746854,
+    "avg_submission_rate": 0.916190362910045,
+    "pass_rate": 0.6982549149547161,
+    "distinction_rate": 0.19770267285177823,
+    "fail_rate": 0.08857963331124365,
+    "withdrawn_rate": 0.015462778882261984
+  }
+}

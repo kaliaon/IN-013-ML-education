@@ -32,7 +32,11 @@ Thumbs.db
 *.log
 
 # Data artifacts (keep repo lean)
-data/**
+# Exclude raw data but INCLUDE processed data for deployment
+data/raw/**
+data/interim/**
+# Allow processed data for deployment
+!data/processed/**
 
 # Streamlit cache
 .streamlit/
